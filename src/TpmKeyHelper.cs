@@ -2,14 +2,13 @@ using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
-using System.Text;
 using System;
 using System.Security.Principal;
 
-namespace TpmKeyHelper
+namespace WindowsHelperFunctions
 {
   [SupportedOSPlatform("windows")]
-  public static class NativeExports
+  public static class TpmKeyHelper
   {
     [UnmanagedCallersOnly(EntryPoint = "generate_tpm_key")]
     public static int GenerateTpmKey(
@@ -19,7 +18,7 @@ namespace TpmKeyHelper
       // Make sure we're being called from windows
       if (!OperatingSystem.IsWindows())
       {
-        WriteError(errorBuffer, errorBufferLength, "This libarary will only work on Windows.");
+        SharedFunctions.WriteError(errorBuffer, errorBufferLength, "This libarary will only work on Windows.");
         return -2;
       }
 
@@ -33,18 +32,18 @@ namespace TpmKeyHelper
 
       if (!principal.IsInRole(WindowsBuiltInRole.Administrator))
       {
-        WriteError(errorBuffer, errorBufferLength, "Running without Elevated Privileges. Creating Key in CurrentUser Store. Administrative Privileges are requried to create a key in the LocalMachine store for IIS.");
+        SharedFunctions.WriteError(errorBuffer, errorBufferLength, "Running without Elevated Privileges. Creating Key in CurrentUser Store. Administrative Privileges are requried to create a key in the LocalMachine store for IIS.");
         storeLocation = StoreLocation.CurrentUser;
       }
 
       try
       {
         // Get the string values by dereferencing the pointers, dump immediately if they're not present
-        string alias = Marshal.PtrToStringUni(aliasPtr)
+        string alias = Marshal.PtrToStringUTF8(aliasPtr)
             ?? throw new ArgumentNullException(nameof(aliasPtr));
-        string containerName = Marshal.PtrToStringUni(containerPtr)
+        string containerName = Marshal.PtrToStringUTF8(containerPtr)
             ?? throw new ArgumentNullException(nameof(containerPtr));
-        string subjectDn = Marshal.PtrToStringUni(subjectDnPtr)
+        string subjectDn = Marshal.PtrToStringUTF8(subjectDnPtr)
             ?? throw new ArgumentNullException(nameof(subjectDnPtr));
 
         // Create a key
@@ -81,39 +80,20 @@ namespace TpmKeyHelper
       }
       catch (ArgumentNullException ex)
       {
-        WriteError(errorBuffer, errorBufferLength, $"Missing argument {ex.ParamName}");
+        SharedFunctions.WriteError(errorBuffer, errorBufferLength, $"Missing argument {ex.ParamName}");
         return -1;
       }
       catch (CryptographicException ex)
       {
-        WriteError(errorBuffer, errorBufferLength, $"Cryptographic error: {ex.Message}");
+        SharedFunctions.WriteError(errorBuffer, errorBufferLength, $"Cryptographic error: {ex.Message}");
         return -1;
       }
       catch (Exception ex)
       {
-        WriteError(errorBuffer, errorBufferLength, $"Unexpected error: {ex.Message}");
+        SharedFunctions.WriteError(errorBuffer, errorBufferLength, $"Unexpected error: {ex.Message}");
         return -1;
       }
     }
 
-    private static void WriteError(nint errorBuffer, int errorBufferLength, string errorMessage)
-    {
-      if (errorBuffer == 0 || errorBufferLength < 1)
-      {
-        return;
-      }
-
-      // How long is the message
-      var utfErrorMessageBytes = Encoding.UTF8.GetBytes(errorMessage);
-
-      // Which is shorter, the message or the buffer?
-      int errorLength = Math.Min(utfErrorMessageBytes.Length, errorBufferLength - 1);
-
-      // Copy as much of the massage as possible to the error buffer
-      Marshal.Copy(utfErrorMessageBytes, 0, errorBuffer, errorLength);
-
-      // Zero terminate the string
-      Marshal.WriteByte(errorBuffer, errorLength, 0);
-    }
   }
 }
