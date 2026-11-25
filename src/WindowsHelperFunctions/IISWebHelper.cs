@@ -86,7 +86,7 @@ namespace WindowsHelperFunctions
         writer.WriteEndArray();
       }
 
-      return stream.ToString();
+      return Encoding.UTF8.GetString(stream.ToArray());
     }
 
 
