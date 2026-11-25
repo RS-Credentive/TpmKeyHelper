@@ -1,9 +1,10 @@
-﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.11.35327.3
+# Visual Studio Version 18
+VisualStudioVersion = 18.12.12412.261
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsHelperFunctions", "WindowsHelperFunctions.csproj", "{09E08C00-DAF2-4367-8DD5-D1DE939E5236}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsHelperFunctions", "src\WindowsHelperFunctions\WindowsHelperFunctions.csproj", "{09E08C00-DAF2-4367-8DD5-D1DE939E5236}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsHelperFunctions.Tests", "tests\WindowsHelperFunctions.Tests\WindowsHelperFunctions.Tests.csproj", "{62B673F2-F6F4-7114-122C-FE9DD726B4C1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,7 +21,13 @@ Global
 		{09E08C00-DAF2-4367-8DD5-D1DE939E5236}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{09E08C00-DAF2-4367-8DD5-D1DE939E5236}.Release|Any CPU.Build.0 = Release|Any CPU
 		{09E08C00-DAF2-4367-8DD5-D1DE939E5236}.Release|x64.ActiveCfg = Release|x64
-		{09E08C00-DAF2-4367-8DD5-D1DE939E5236}.Release|x64.Build.0 = Release|x64
+		{62B673F2-F6F4-7114-122C-FE9DD726B4C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62B673F2-F6F4-7114-122C-FE9DD726B4C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62B673F2-F6F4-7114-122C-FE9DD726B4C1}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{62B673F2-F6F4-7114-122C-FE9DD726B4C1}.Debug|x64.Build.0 = Debug|Any CPU
+		{62B673F2-F6F4-7114-122C-FE9DD726B4C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62B673F2-F6F4-7114-122C-FE9DD726B4C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62B673F2-F6F4-7114-122C-FE9DD726B4C1}.Release|x64.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
